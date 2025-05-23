@@ -16,4 +16,4 @@ process.on('SIGINT', function () {
 exports = module.exports = app
 
 // Logging initialization
-console.log('Starting server on port 8080')
+console.log('Starting server on port ' + config.port)
