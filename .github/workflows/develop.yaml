@@ -1,0 +1,15 @@
+name: Development pipeline
+
+on:
+  - push
+
+jobs:
+  build_and_test:
+    name: "Build the application and run tests"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+      - run: make dependencies
+      - run: make build
+      - run: make test
