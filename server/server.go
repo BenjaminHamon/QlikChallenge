@@ -31,7 +31,7 @@ func NewServer() Server {
 func (srv *server) Start() {
 	srv.RegisterRoutes()
 
-	var serviceAddress = "localhost"
+	var serviceAddress = "0.0.0.0"
 	var servicePort = "9091"
 
 	s := http.Server{
