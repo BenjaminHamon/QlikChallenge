@@ -17,7 +17,6 @@ type server struct {
 }
 
 var _ Server = (*server)(nil)
-var servicePort = os.Getenv("PORT")
 
 // NewServer returns an instance of server configured with logger and router
 func NewServer() Server {
@@ -31,8 +30,12 @@ func NewServer() Server {
 
 func (srv *server) Start() {
 	srv.RegisterRoutes()
+
+	var serviceAddress = "localhost"
+	var servicePort = "9091"
+
 	s := http.Server{
-		Addr:    ":" + servicePort,                          // configure the bind address
+		Addr: serviceAddress + ":" + servicePort, // configure the bind address
 		Handler: Tracing()(Logging(srv.logger)(srv.router)), // set the default handler
 		ReadTimeout:  5 * time.Second,   // max time to read request from the client
 		WriteTimeout: 10 * time.Second,  // max time to write response to the client
@@ -41,7 +44,7 @@ func (srv *server) Start() {
 
 	// start the server
 	go func() {
-		srv.logger.Info("Starting server on port 8080")
+		srv.logger.Info("Starting server at '%v'", s.Addr)
 
 		err := s.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {
