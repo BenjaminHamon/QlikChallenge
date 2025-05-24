@@ -1,7 +1,9 @@
 name: Development pipeline
 
 on:
-  - push
+  pull_request:
+    branches:
+      - develop
 
 env:
   CONTAINER_REGISTRY: ghcr.io
