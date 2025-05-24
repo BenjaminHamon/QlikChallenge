@@ -2,6 +2,8 @@ package data
 
 import (
 	"errors"
+	"regexp"
+	"strings"
 )
 
 // ErrMessageNotFound is the error that is returned when there is not matching message
@@ -13,6 +15,7 @@ type Message struct {
 	Text   string `json:"text"`
 	Sender string `json:"sender"`
 	Time   string `json:"-"`
+	IsPalindrome bool `json:"isPalindrome"`
 }
 
 // Messages is the collection of all messages
@@ -33,6 +36,7 @@ func AddMessage(msg *Message) {
 		lastMessageID = messages[len(messages)-1].ID
 	}
 	msg.ID = lastMessageID + 1
+	msg.IsPalindrome = IsPalindrome(msg.Text)
 	messages = append(messages, msg)
 }
 
@@ -61,4 +65,18 @@ func DeleteMessageWithID(messageID int) error {
 	}
 	messages = append(messages[:indexToDelete], messages[indexToDelete+1:]...)
 	return nil
+}
+
+func IsPalindrome(messageText string) bool {
+	var nonAlphanumericRegex = regexp.MustCompile(`[^\p{L}\p{N}]*`)
+	var messageTextNormalized = strings.ToLower(nonAlphanumericRegex.ReplaceAllString(messageText, ""))
+	return messageTextNormalized == Reverse(messageTextNormalized)
+}
+
+func Reverse(s string) string {
+	runes := []rune(s)
+	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
+		runes[i], runes[j] = runes[j], runes[i]
+	}
+	return string(runes)
 }
