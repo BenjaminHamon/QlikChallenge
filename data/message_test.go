@@ -105,3 +105,45 @@ func TestDeleteMessageWithID(t *testing.T) {
 		})
 	}
 }
+
+func TestIsPalindrome(t *testing.T) {
+	defer func() {
+		messages = Messages{}
+	}()
+
+	tests := []struct {
+		name string
+		args string
+		want bool
+	}{
+		{
+			name: "not a palindrome",
+			args: "Hello world",
+			want: false,
+		},
+		{
+			name: "a one word palindrome",
+			args: "radar",
+			want: true,
+		},
+		{
+			name: "a palindrome with extra",
+			args: "Amore, roma",
+			want: true,
+		},
+		{
+			name: "another palindrome with extra",
+			args: "Madam, I'm Adam",
+			want: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := IsPalindrome(tt.args)
+			if got != tt.want {
+				t.Errorf("IsPalindrome(%#v) = %v, want %v", tt.args, got, tt.want)
+			}
+		})
+	}
+}
