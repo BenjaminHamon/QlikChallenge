@@ -22,6 +22,7 @@ type Message struct {
 type Messages []*Message
 
 var messages Messages
+var nonAlphanumericRegex = regexp.MustCompile(`[^\p{L}\p{N}]*`)
 
 // GetMessages returns all the messages
 func GetMessages() Messages {
@@ -68,15 +69,14 @@ func DeleteMessageWithID(messageID int) error {
 }
 
 func IsPalindrome(messageText string) bool {
-	var nonAlphanumericRegex = regexp.MustCompile(`[^\p{L}\p{N}]*`)
-	var messageTextNormalized = strings.ToLower(nonAlphanumericRegex.ReplaceAllString(messageText, ""))
-	return messageTextNormalized == Reverse(messageTextNormalized)
-}
+	var textNormalized = strings.ToLower(nonAlphanumericRegex.ReplaceAllString(messageText, ""))
+	var textLength = len(textNormalized)
 
-func Reverse(s string) string {
-	runes := []rune(s)
-	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
-		runes[i], runes[j] = runes[j], runes[i]
+	for	textIndex := 0 ; textIndex < textLength ; textIndex += 1 {
+		if textNormalized[textIndex] != textNormalized[textLength - textIndex - 1] {
+			return false
+		}
 	}
-	return string(runes)
+
+	return true
 }
